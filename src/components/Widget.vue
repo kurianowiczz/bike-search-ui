@@ -3,9 +3,7 @@
     <div class="header">
       {{ page.title }}
     </div>
-    <div class="description">
-      {{ page.description }}
-    </div>
+    <div class="description">{{ page.description }}</div>
     <div class="path">
       <div class="method">
         {{ page.method }}
@@ -14,17 +12,60 @@
         {{ page.path }}
       </div>
     </div>
-    <button class="btn">Test route</button>
+    <button class="btn" @click="onClick()">Test route</button>
+    <div class="schema" v-if="showSchema">
+      <div v-for="field in page.schema" :key="field">
+        <input
+          class="field"
+          type="text"
+          :placeholder="field"
+          v-model="postObj[field]"
+        />
+      </div>
+      <button class="btn-post" @click="onPostClick()">Send</button>
+    </div>
+    <div class="result">
+      <textarea
+        name="result"
+        id="result"
+        class="area"
+        v-model="result"
+        disabled="true"
+      ></textarea>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import axios from "@/config/api";
 
 export default Vue.extend({
   name: "Widget",
+  data() {
+    return {
+      result: "",
+      postObj: {},
+      showSchema: false
+    };
+  },
   props: {
     page: Object
+  },
+  methods: {
+    async onClick() {
+      const { method, path } = this.page;
+      if (method === "get") {
+        const { data } = await axios.get(path);
+        this.result = JSON.stringify(data, undefined, 2);
+      } else {
+        this.showSchema = true;
+      }
+    },
+    async onPostClick() {
+      const { data } = await axios.post(this.page.path, this.postObj);
+      this.result = JSON.stringify(data, undefined, 2);
+    }
   }
 });
 </script>
@@ -38,15 +79,17 @@ export default Vue.extend({
 }
 
 .header {
-  background-color: #ffe4c4;
+  background-color: #29bdb3;
   padding: 10px;
   text-align: start;
+  color: black;
 }
 
 .description {
   opacity: 0.7;
   padding: 10px;
   text-align: start;
+  white-space: pre;
 }
 
 .path {
@@ -65,7 +108,7 @@ export default Vue.extend({
 }
 
 .method {
-  background-color: blueviolet;
+  background-color: #472ed2;
   border-radius: 3px;
   color: white;
   width: max-content;
@@ -74,7 +117,7 @@ export default Vue.extend({
 
 .btn {
   border: none;
-  background-color: coral;
+  background-color: #ff005c;
   cursor: pointer;
   outline: none;
   padding: 10px;
@@ -82,6 +125,41 @@ export default Vue.extend({
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 18px;
+}
+
+.field {
+  padding: 3px;
+  border-radius: 2px;
+  border: 1px solid grey;
+  margin-bottom: 10px;
+  width: 50%;
+  box-sizing: border-box;
+}
+
+.schema {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.btn-post {
+  width: 50%;
+  padding: 10px;
+  border: none;
+  background-color: #472ed2;
+  color: white;
+  outline: none;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 18px;
   border-radius: 3px;
+  cursor: pointer;
+}
+
+.area {
+  width: 100%;
+  border: none;
+  resize: none;
+  height: 200px;
 }
 </style>

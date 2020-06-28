@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
     <div class="container">
       <div v-for="(page, index) in pages" :key="page.key + index">
         <Widget :page="page" />
@@ -30,11 +29,10 @@ export default Vue.extend({
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .container {
@@ -42,5 +40,11 @@ export default Vue.extend({
   padding: 40px;
   grid-template-columns: 1fr 1fr;
   grid-gap: 30px 30px;
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
