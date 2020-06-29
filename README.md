@@ -22,3 +22,5 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+The solution is [here](https://bike-search-ui.herokuapp.com/).
